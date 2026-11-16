@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Bürette Maskiert</title>
+
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      background: #eee;
+    }
+
+    .scene {
+      position: relative;
+      width: 371px; /* exakt dein Bild */
+    }
+
+    /* Bild oben */
+    .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+    }
+
+    /* Flüssigkeit darunter */
+    .liquid-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="scene">
+
+  <!-- Flüssigkeit (unten) -->
+  <svg class="liquid-layer" viewBox="0 0 371 1000">
+
+    <defs>
+
+      <!-- 🧪 Bürette (exakt angepasst) -->
+      <clipPath id="buretteClip">
+        <path d="
+          M180 20
+          L190 20
+          L190 340
+          Q190 360 200 370
+          Q210 380 210 400
+          Q210 420 200 430
+          Q190 440 180 440
+          Q170 440 160 430
+          Q150 420 150 400
+          Q150 380 160 370
+          Q170 360 170 340
+          L170 20
+          Z"/>
+      </clipPath>
+
+      <!-- 🧪 Kolben -->
+      <clipPath id="flaskClip">
+        <path d="
+          M120 500
+          L250 500
+          L320 900
+          Q300 960 185 970
+          Q70 960 50 900
+          Z"/>
+      </clipPath>
+
+    </defs>
+
+    <!-- Flüssigkeit Bürette -->
+    <rect id="buretteLiquid"
+          x="150" y="440"
+          width="60" height="0"
+          fill="#4da6ff"
+          clip-path="url(#buretteClip)"/>
+
+    <!-- Flüssigkeit Kolben -->
+    <rect id="flaskLiquid"
+          x="50" y="950"
+          width="270" height="0"
+          fill="#4da6ff"
+          clip-path="url(#flaskClip)"/>
+
+  </svg>
+
+  <!-- Originalbild (oben!) -->
+  <img src="img/titration.png" class="bg">
+
+</div>
+
+<script>
+  let buretteLevel = 0;
+  let flaskLevel = 0;
+
+  const burette = document.getElementById("buretteLiquid");
+  const flask = document.getElementById("flaskLiquid");
+
+  // Bürette füllen
+  const fill = setInterval(() => {
+
+    if (buretteLevel >= 420) {
+      clearInterval(fill);
+      drip();
+      return;
+    }
+
+    buretteLevel += 2;
+    burette.setAttribute("y", 440 - buretteLevel);
+    burette.setAttribute("height", buretteLevel);
+
+  }, 20);
+
+  // Tropfen + Kolben füllen
+  function drip() {
+    const interval = setInterval(() => {
+
+      if (flaskLevel >= 200) {
+        clearInterval(interval);
+        return;
+      }
+
+      flaskLevel += 1.5;
+      flask.setAttribute("y", 950 - flaskLevel);
+      flask.setAttribute("height", flaskLevel);
+
+    }, 50);
+  }
+</script>
+
+</body>
+</html>

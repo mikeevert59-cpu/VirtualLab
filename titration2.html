@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Titration – Realistisch</title>
+
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      background: #eee;
+    }
+
+    .scene {
+      position: relative;
+      width: 371px;
+    }
+
+    /* Bild oben */
+    .bg {
+      position: absolute;
+      width: 100%;
+      z-index: 3;
+    }
+
+    /* Flüssigkeit darunter */
+    .liquid-layer {
+      position: absolute;
+      top: -30px;
+      left:-300px;
+      width: 100%;
+      height: 50%;
+
+      z-index: 1;
+    }
+
+    /* weicher Look */
+    .liquid {
+      fill: url(#liquidGradient);
+    }
+
+    /* Rohrfluss */
+    .flow {
+      stroke: #4da6ff;
+      stroke-width: 3;
+      fill: none;
+      stroke-dasharray: 120;
+      stroke-dashoffset: 120;
+      animation: flowAnim 2s linear infinite;
+    }
+
+    @keyframes flowAnim {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Tropfen */
+    .drop {
+      fill: #4da6ff;
+      opacity: 0.8;
+      animation: drop 1s infinite;
+    }
+
+    @keyframes drop {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(60px); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="scene">
+  <svg class="liquid-layer"
+       viewBox="0 0 371 1000"
+       preserveAspectRatio="xMidYMid meet">
+ <!--<svg class="liquid-layer" viewBox="0 0 371 1000">-->
+
+    <defs>
+
+      <!-- 🌊 realistischer Farbverlauf -->
+      <linearGradient id="liquidGradient" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#7fc8ff"/>
+        <stop offset="100%" stop-color="#2f80ed"/>
+      </linearGradient>
+
+      <!-- 🧪 Bürette (feiner) -->
+      <clipPath id="buretteClip">
+        <path d="
+        M178 20
+        L192 20
+        L192 335
+        Q192 355 205 365
+        Q215 375 215 395
+        Q215 415 205 425
+        Q195 435 185 435
+        Q175 435 165 425
+        Q155 415 155 395
+        Q155 375 165 365
+        Q178 355 178 335
+        Z"/>
+      </clipPath>
+
+      <!-- 🧪 Kolben -->
+      <clipPath id="flaskClip">
+        <path d="
+        M120 510
+        L250 510
+        L320 900
+        Q290 980 185 990
+        Q80 980 50 900
+        Z"/>
+      </clipPath>
+
+    </defs>
+
+    <!-- Flüssigkeit Bürette -->
+    <path id="buretteLiquid"
+          class="liquid"
+          clip-path="url(#buretteClip)"
+          d="M178 440 L192 440 L192 440 Q185 445 178 440 Z"/>
+
+    <!-- Rohrfluss -->
+    <path id="tubeFlow"
+          class="flow"
+          d="M185 435 C185 470, 240 470, 240 520"
+          style="display:none"/>
+
+    <!-- Tropfen -->
+    <circle id="drop" cx="240" cy="520" r="4" class="drop" style="display:none"/>
+
+    <!-- Flüssigkeit Kolben -->
+    <path id="flaskLiquid"
+          class="liquid"
+          clip-path="url(#flaskClip)"
+          d="M50 950 L320 950 L320 950 Q185 940 50 950 Z"/>
+
+  </svg>
+
+  <img src="img/titration.png" class="bg">
+
+</div>
+
+<script>
+
+  let buretteLevel = 440;
+  let flaskLevel = 950;
+
+  const burette = document.getElementById("buretteLiquid");
+  const flask = document.getElementById("flaskLiquid");
+  const tube = document.getElementById("tubeFlow");
+  const drop = document.getElementById("drop");
+
+  // 🧪 Bürette füllen (mit Meniskus!)
+  function fillBurette() {
+
+    const interval = setInterval(() => {
+
+      if (buretteLevel <= 100) {
+        clearInterval(interval);
+        startFlow();
+        return;
+      }
+
+      buretteLevel -= 2;
+
+      burette.setAttribute("d", `
+      M178 ${buretteLevel}
+      L192 ${buretteLevel}
+      L192 440
+      Q185 450 178 440
+      Z
+    `);
+
+    }, 20);
+  }
+
+  // 💧 Fluss starten
+  function startFlow() {
+    tube.style.display = "block";
+    drop.style.display = "block";
+
+    const interval = setInterval(() => {
+
+      if (flaskLevel <= 700) {
+        clearInterval(interval);
+        return;
+      }
+
+      flaskLevel -= 1.5;
+
+      flask.setAttribute("d", `
+      M50 950
+      L320 950
+      L320 ${flaskLevel}
+      Q185 ${flaskLevel - 20} 50 ${flaskLevel}
+      Z
+    `);
+
+    }, 40);
+  }
+
+  // Start automatisch
+  fillBurette();
+
+</script>
+
+</body>
+</html>

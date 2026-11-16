@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: white;
+    }
+
+    .parent-container {
+      position: relative;   /* Referenz für absolute Position */
+      /*display: inline-block;*/
+      display: flex;
+      justify-content: center; /* Horizontal */
+      align-items: center;
+    }
+    .overlay {
+      position: absolute;
+      top: 5px;
+      left: 375px;
+      height: 100%;
+      pointer-events: none;
+
+      z-index: 1;
+      opacity: 50%;
+
+    }
+    /* Bild */
+    #bg {
+      position: absolute;
+      top: 5px;
+      left: 620px;
+      z-index: 2;
+      opacity: 50%;
+    }
+
+    /* Flüssigkeit */
+    .liquid {
+      fill: #4da6ff;
+      z-index: -1;
+    }
+
+    /* Animation */
+    @keyframes fillBurette {
+      from { height: 0; }
+      to { height: 260px; }
+    }
+
+    @keyframes flowTube {
+      from { stroke-dashoffset: 100; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes drop {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(80px); opacity: 0; }
+    }
+
+    .drop {
+      fill: #4da6ff;
+      animation: drop 1s linear infinite;
+    }
+
+    button {
+      position: absolute;
+      top: 20px;
+    }
+  </style>
+<body>
+
+<div class="parent-container">
+  <button onclick="startAnimation()">Start</button>
+
+  <img src="img/titration.png" id="" style="background-color: crimson">
+
+  <svg class="overlay">
+
+    <!-- Bürette Outline -->
+    <rect x="20" y="20" width="20" height="300" fill="none" stroke="black"/>
+
+    <!-- Flüssigkeit in Bürette -->
+    <clipPath id="buretteClip">
+      <rect x="20" y="20" width="20" height="300"/>
+    </clipPath>
+
+    <rect id="buretteLiquid" x="20" y="20" width="20" height="0"
+          class="liquid" clip-path="url(#buretteClip)" fill="none"/>
+
+    <!-- Rohr -->
+    <svg x="-20" y="280">
+      <path d="M0.437073 0.242828L5.43707 9.24283V26.7428L20.4371 34.7428L103.437 56.2428L121.937 63.7428H132.937V72.2428H136.437V60.2428L121.937
+      56.2428L118.437 52.7428L29.4371 31.7428L14.4371 23.7428V11.7428L17.4371 0.242828" stroke=""
+            stroke-width="4"
+            fill="blue"/>
+      <!--
+      <path id="tube"
+          d="M90 320 C90 350, 140 350, 140 380"
+          stroke=""
+          stroke-width="4"
+          fill="blue"
+          />-->
+    </svg>
+
+    <!-- Tropfen -->
+    <circle id="drop" cx="140" cy="380" r="4" class="drop" style="display:none"/>
+
+    <!-- Kolben -->
+    <svg x="45" y="180">
+    <path d="M110 380 L170 480 L50 480 Z"
+          fill="red" stroke="blue" />
+    </svg>
+    <!-- Flüssigkeit im Kolben -->
+    <clipPath id="flaskClip">
+      <path d="M110 380 L170 480 L50 480 Z"/>
+    </clipPath>
+
+    <rect id="flaskLiquid"
+          x="50" y="480"
+          width="120"
+          height="0"
+          stroke="black"
+          class="liquid"
+          clip-path="url(#flaskClip)"/>
+
+  </svg>
+
+  </div>
+<script>
+  function startAnimation() {
+
+    const burette = document.getElementById("buretteLiquid");
+    const tube = document.getElementById("tube");
+    const drop = document.getElementById("drop");
+    const flask = document.getElementById("flaskLiquid");
+
+    let level = 0;
+    let flaskLevel = 0;
+
+    // Bürette füllen
+    const fillInterval = setInterval(() => {
+      if (level >= 260) {
+        clearInterval(fillInterval);
+        startFlow();
+        return;
+      }
+
+      level += 2;
+      burette.setAttribute("y", 320 - level);
+      burette.setAttribute("height", level);
+
+    }, 20);
+
+    function startFlow() {
+      tube.style.animation = "flowTube 2s linear forwards";
+      drop.style.display = "block";
+
+      // Kolben füllen
+      const dripInterval = setInterval(() => {
+        if (flaskLevel >= 80) {
+          clearInterval(dripInterval);
+          return;
+        }
+
+        flaskLevel += 1.5;
+        /*flask.setAttribute("y", 480 - flaskLevel);
+        flask.setAttribute("height", flaskLevel);*/
+        flask.setAttribute("y", 480 - flaskLevel);
+        flask.setAttribute("height", flaskLevel);
+
+      }, 80);
+    }
+  }
+</script>
+
+</body>
+</html>

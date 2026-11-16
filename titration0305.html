@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="titr_style.css">
+
+</head>
+<body>
+<div class= "row" id="container">
+  Titration for dummies
+</div>
+
+<div class="row" id="scene">
+  <div class="col" id="box1"><div class="head1">1. Versuchsmaterialien</div>
+    <div id="maßlös">
+      <div>Maßlösung: NaOH c = 1molar</div>
+      <div style="align-self:flex-end"><img src="img/ätzend.png" width="50" height="50"></div>
+      <!--
+      <table style="padding: 10px; background-color: #4da6ff"><tr>
+      <td>Maßlösung: NaOH c = 1molar</td>
+      <td style="align-content: end"><img src="img/ätzend.png" width="50" height="50"></td>
+    </tr>
+    </table>
+    -->
+    </div>
+    <div id="probelös">
+      <div>Probelösung: HCl c?, V = 500ml</div>
+      <div style="align-self:flex-end"><img src="img/giftig.png" width="50" height="50"></div>
+      <!--
+      <table style="padding: 10px"><tr>
+        <td>Probelösung: HCl c?, V = 500ml</td>
+        <td><img src="img/giftig.png" width="50" height="50"></td>
+      </tr>
+      </table>
+      -->
+    </div>
+    <div id="indik">
+      <div>Indikator: Phenolphthalein</div>
+      <div style="align-self:flex-end"><img src="img/phpht01.jpeg" width="50"></div>
+      <!--
+      <table style="padding: 10px"><tr>
+        <td>Probelösung: HCl c?, V = 500ml</td>
+        <td><img src="img/giftig.png" width="50" height="50"></td>
+      </tr>
+      </table>
+      -->
+    </div>
+  </div>
+  <div class="setup"  style=""><div class="head2">2. Versuchsdurchführung</div>
+    <svg viewBox="-200 0 600 600" width="600" height="600" class="vb" >
+      <image xlink:href="img/Titration2.svg"/>
+      <g id="buretteScale" transform="translate(103,15)"></g>
+      <!--Bürette-->
+      <svg x="106" y="25" width="50" height="260">
+        <!--<g id="buretteScale"></g>-->
+        <!-- ClipPath -->
+        <clipPath id="buretteClip">
+          <rect x="0" y="0" width="25" height="260"/>
+        </clipPath>
+
+        <!-- Flüssigkeit (dein Path bleibt!) -->
+        <path id="buretteLiquid"
+              d="M0.5 236V0.5H21V236L19.5 240.5L15.5 246.5H6L2 240.5L0.5 236Z"
+              class="liquid"
+              visibility="hidden"
+              clip-path="url(#buretteClip)"/>
+
+      </svg>
+
+      <!-- Rohr -->
+      <svg   x = "116" y = "270">
+        <path id="tube"
+              d="M0.5 0V13.5L18 21L56.5 30L94.5 40L102.5 43V56.5"
+              stroke="#4da6ff"
+              stroke-width="4"
+              fill="none"
+              visibility="hidden"/>
+      </svg>
+      <!-- Tropfen -->
+      <circle id="drop" cx="219" cy="420" r="4" class="drop"/>
+
+      <svg x="149" y="510" id="flaskLiquid">
+        <defs>
+          <clipPath id="flaskClip">
+            <path
+              d="M6.5 21.0031L13 1.50311L127 0.503113L130 9.00311L132 16.5031L135 25.0031L136.5 31.5031L135 37.0031L132 41.5031L126 45.0031L71.5
+           46.5031H32H19.5L13 45.0031L6.5 40.0031L4.5 32.5031V28.0031L6.5 21.0031Z"
+            />
+          </clipPath>
+
+          <filter id="blur">
+            <feGaussianBlur stdDeviation="3"/>
+          </filter>
+        </defs>
+
+        <!-- sichtbare Flüssigkeit (optional!) -->
+        <path
+          d="M6.5 21.0031L13 1.50311L127 0.503113L130 9.00311L132 16.5031L135 25.0031L136.5 31.5031L135 37.0031L132 41.5031L126 45.0031L71.5
+       46.5031H32H19.5L13 45.0031L6.5 40.0031L4.5 32.5031V28.0031L6.5 21.0031Z"
+          fill=""/>"
+        opacity="0.2"
+        />
+        <!--neu-->
+        <rect id="flaskFill"
+              x="0"
+              y="60"
+              width="140"
+              height="30"
+              fill=""
+              opacity="0.35"
+              clip-path="url(#flaskClip)"/>
+
+        <!-- Schlieren-Layer -->
+        <g clip-path="url(#flaskClip)" id="mixLayer"></g>
+      </svg>
+      <!-- pH-Elektrode -->
+      <g id="electrode">
+        <!-- Kabel -->
+        <path
+          d="M360 40 C360 90 350 140 340 200"
+          stroke="#444"
+          stroke-width="4"
+          fill="none"
+        />
+
+        <!-- Elektrodenkörper -->
+        <rect
+          x="325"
+          y="200"
+          width="18"
+          height="150"
+          rx="8"
+          fill="#d9d9d9"
+          stroke="#888"
+          stroke-width="2"
+        />
+
+        <!-- Innenstab -->
+        <line
+          x1="334"
+          y1="215"
+          x2="334"
+          y2="330"
+          stroke="#bbb"
+          stroke-width="2"
+        />
+
+        <!-- Sensorkugel -->
+        <ellipse
+          id="sensorTip"
+          cx="334"
+          cy="356"
+          rx="12"
+          ry="16"
+          fill="#222"
+        />
+
+        <!-- Reflexion -->
+        <ellipse
+          cx="330"
+          cy="350"
+          rx="3"
+          ry="5"
+          fill="white"
+          opacity="0.5"
+        />
+      </g>
+      -->
+    </svg>
+    <!--nicht so gut
+    <div id="lcdDisplay">
+      <div id="lcdPH">
+        pH = 1.75
+      </div>
+      <div id="lcdVolume">
+        V = 0.00 <span class="unit">mL</span>
+      </div>
+    </div>
+    -->
+
+    <div id="digitalPanel">
+      <div class="lcdFrame">
+        <div class="lcdLabel">
+          Verbrauch
+        </div>
+        <div id="lcdDisplay">
+          0.00
+          <span class="unit">mL</span>
+        </div>
+        <div id="progressWrap">
+          <div id="progressBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+    <div id="lcdPanel">
+      <div class="lcdLabel">
+        Verbrauch
+      </div>
+      <div id="lcdDisplay">
+        <span id="lcdValue">0.00</span>
+        <span class="lcdUnit">mL</span>
+      </div>
+    </div>
+    -->
+    <!--
+    <div id="digitalDisplay">
+      <span id="digitalValue">0.00</span>
+      <span class="unit">ml</span>
+    </div>
+    -->
+    <!--
+    <div id="maßlös">
+      Maßlösung: NaOH c = 1molar
+      <img src="img/ätzend.png" width="100" height="100"></img>
+    </div>
+    <div id="probelös">
+      Probelösung: HCl c?, V = 500ml
+      <img src="img/giftig.png" width="100" height="100"></img>
+    </div>-->
+    <div class="control">
+      <button onclick="startAnimation()">Bürette füllen</button>
+      <button id="toggle" onclick="toggleDrip()">Start Titration</button>
+    </div>
+  </div>
+  <div class="panel"><div class="head3">3. Versuchsauswertung</div>
+    <!--
+      <div id="volumeDisplay">Verbrauch Maßlösung: 0.00 ml</div>
+      <div id="endpointLamp">
+        Äquivalenzpunkt erreicht
+      </div>-->
+      <canvas id="curve" width="420" height="260"></canvas>
+    <table id="dataTable">
+      <thead>
+      <tr>
+        <th>Volumen (ml)</th>
+        <th>pH</th>
+      </tr>
+      </thead>
+
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+      <!--<div id="werte"></div>-->
+      <div id="ergebnis" style="visibility: hidden">Die gesuchte Konzentration der NaOH-Lösung beträgt <br>gemäß <b>c<sub>Pr</sub>=
+        <span style="display:inline-block; text-align:center; vertical-align:middle;">C<sub>Maß</sub>*V<sub>Maß</sub><br><hr style="margin:0; border:1px solid black;">V<sub>Pr</sub></span>
+      </b>0,02 mol/l.</div>
+    </div>
+</div>
+<script src="js_titr_2105.js" defer></script>
+</body>
+</html>
+

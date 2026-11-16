@@ -1,0 +1,46 @@
+<!-- pH-Glaselektrode und Kabel -->
+          <g id="phElectrode">
+            <!-- Kabel: vom Elektrodenkopf nach oben -->
+            <path d="M232 345
+   C280 320, 310 285, 290 255
+   S270 210, 310 180
+   S335 145, 480 110"
+                  fill="none"
+                  stroke="#252525"
+                  stroke-width="3"
+                  stroke-linecap="round"/>
+            <!--
+            <path d="M232 345
+                     C250 320, 250 285, 232 260
+                     S218 225, 235 205"
+                  fill="none"
+                  stroke="#252525"
+                  stroke-width="3"
+                  stroke-linecap="round"/>-->
+
+            <!-- Elektrodenkopf -->
+            <rect x="225" y="338" width="14" height="18"
+                  rx="3" fill="#444"
+                  stroke="#222" stroke-width="1"/>
+
+            <!-- Glaskörper der Elektrode -->
+            <path d="M226 350
+                     L238 350
+                     L234 432
+                     Q232 441 229 432 Z"
+                  fill="#e9f6fa"
+                  fill-opacity="0.9"
+                  stroke="#718995"
+                  stroke-width="1.5"/>
+
+            <!-- Innenleiter -->
+            <path d="M232 355 L232 425"
+                  stroke="#aab9c0"
+                  stroke-width="2"/>
+
+            <!-- Glasmembran an der Spitze -->
+            <ellipse cx="231.5" cy="432" rx="3.5" ry="5"
+                     fill="#b9e8f5"
+                     stroke="#718995"
+                     stroke-width="1"/>
+          </g>

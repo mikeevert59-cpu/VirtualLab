@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 40px;
+    background: #f5f5f5;
+    font-family: sans-serif;
+  }
+
+  #scene {
+    position: relative;
+    width: 260px;
+  }
+
+
+  text {
+    font-size: 12px;
+    font-family: sans-serif;
+    text-anchor: middle;
+  }
+
+  .control {
+    stroke: #337599;
+    stroke-width: 1;
+    stroke-dasharray: 1 1;
+  }
+
+
+  .liquid {
+    fill: #4da6ff;
+    opacity: 0.35;
+    transition: fill 0.6s ease;
+  }
+
+  /* leichte Wellenbewegung */
+  @keyframes liquidWave {
+    0%   { transform: scaleY(1); }
+    50%  { transform: scaleY(1.02); }
+    100% { transform: scaleY(1); }
+  }
+
+  /* Rohr Animation */
+  @keyframes flow {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes dropFall {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(70px);
+      opacity: 0;
+    }
+  }
+
+  .drop {
+    fill: #4da6ff;
+    opacity: 0;
+  }
+
+  #tube {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  #flaskLiquid{
+    /*fill: #b3d4fc;*/
+    /*fill: white;*/
+
+  }
+
+  .mix {
+    /*fill: #ff4da6;*/
+    fill: hotpink;
+    opacity: 0.5;
+    filter: url(#blur);
+    animation: swirl 2s ease-out forwards;
+  }
+
+  @keyframes swirl {
+    0% {
+      transform: translate(0,0) scale(0.5);
+      opacity: 0.4;
+    }
+    100% {
+      transform: translate(20px,-40px) scale(1.5);
+      opacity: 0;
+    }
+  }
+</style>
+<body>
+<div class="row" id="scene">
+
+  <div class="col">
+    <svg viewBox="0 0 600 600" width="600" height="600" class="vb" >
+      <image xlink:href="img/Titration2.svg"/>
+
+      <svg x="106" y="25" width="25" height="260">
+
+        <!-- ClipPath -->
+        <clipPath id="buretteClip">
+          <rect x="0" y="0" width="25" height="260"/>
+        </clipPath>
+
+        <!-- Flüssigkeit (dein Path bleibt!) -->
+        <path id="buretteLiquid"
+              d="M0.5 236V0.5H21V236L19.5 240.5L15.5 246.5H6L2 240.5L0.5 236Z"
+              class="liquid"
+              visibility="hidden"
+              clip-path="url(#buretteClip)"/>
+      </svg>
+
+
+      <!-- Bürette -->
+      <!--<clipPath id="buretteClip">
+        <rect id = "burViereck" x="107" y="5" width="20" height="260"/>
+        <path d="M0.5 236V0.5H21V236L19.5 240.5L15.5 246.5H6L2 240.5L0.5 236Z" stroke="black"/>
+      </clipPath>-->
+
+      <!--<rect id="buretteLiquid"
+            x = "107"
+            y = "5"
+            width="20"
+            height="0"
+            class="liquid"
+            opacity="0.5"
+            clip-path="url(#buretteClip)" />-->
+
+      <!--noch ne Bürette-->
+      <!--
+      <svg x = "106" y="5" height="0" id="buretteLiquid" class="liquid" visibility="hidden">
+        <path d="M0.5 236V0.5H21V236L19.5 240.5L15.5 246.5H6L2 240.5L0.5 236Z"
+        />
+      </svg>
+    -->
+
+
+      <!-- Rohr -->
+      <svg   x = "116" y = "270">
+        <path id="tube"
+              d="M0.5 0V13.5L18 21L56.5 30L94.5 40L102.5 43V56.5"
+              stroke="#4da6ff"
+              stroke-width="4"
+              fill="none"
+              visibility="hidden"/>
+      </svg>
+      <!-- Tropfen -->
+      <circle id="drop" cx="219" cy="420" r="4" class="drop"/>
+      <!--
+      <svg x="149" y = "510" id="flaskLiquid">
+        <path id="flaskClip"
+              d="M6.5 21.0031L13 1.50311L127 0.503113L130 9.00311L132 16.5031L135 25.0031L136.5 31.5031L135 37.0031L132 41.5031L126 45.0031L71.5
+              46.5031H32H19.5L13 45.0031L6.5 40.0031L4.5 32.5031V28.0031L6.5 21.0031Z" stroke="" fill="white" shape-rendering="crispEdges"
+        />
+        <g clip-path="url(#flaskClip)" id="mixLayer"></g>
+        <defs>
+          <filter id="blur">
+            <feGaussianBlur stdDeviation="3"/>
+          </filter>
+        </defs>
+      </svg>
+      -->
+      <svg x="149" y="510" id="flaskLiquid">
+
+        <defs>
+          <clipPath id="flaskClip">
+            <path
+              d="M6.5 21.0031L13 1.50311L127 0.503113L130 9.00311L132 16.5031L135 25.0031L136.5 31.5031L135 37.0031L132 41.5031L126 45.0031L71.5
+           46.5031H32H19.5L13 45.0031L6.5 40.0031L4.5 32.5031V28.0031L6.5 21.0031Z"
+            />
+          </clipPath>
+
+          <filter id="blur">
+            <feGaussianBlur stdDeviation="3"/>
+          </filter>
+        </defs>
+
+        <!-- sichtbare Flüssigkeit (optional!) -->
+        <path
+          d="M6.5 21.0031L13 1.50311L127 0.503113L130 9.00311L132 16.5031L135 25.0031L136.5 31.5031L135 37.0031L132 41.5031L126 45.0031L71.5
+       46.5031H32H19.5L13 45.0031L6.5 40.0031L4.5 32.5031V28.0031L6.5 21.0031Z"
+          fill="lightblue"/>"
+          opacity="0.2"
+        />
+        <!--neu-->
+        <rect id="flaskFill"
+              x="0"
+              y="60"
+              width="140"
+              height="0"
+              fill="#4da6ff"
+              opacity="0.35"
+              clip-path="url(#flaskClip)"/>
+
+        <!-- Schlieren-Layer -->
+        <g clip-path="url(#flaskClip)" id="mixLayer"></g>
+
+      </svg>
+    </svg>
+  </div>
+  <div class="col">
+    <button onclick="startAnimation()">Bürette füllen</button>
+    <!--
+    <button onclick="dripper()">Titrieren</button>
+    <button onclick="dripStop()">Stopp Titration</button>-->
+    <button id="toggle" onclick="toggleDrip()">Start Titration</button>
+
+  </div>
+</div>
+<script>
+
+  let running = false;
+  let dripInterval = null; // wichtig: global speichern
+  let flaskLevel = 0;
+  let maxLevel = 180;       // maximale Füllhöhe
+  let equivalence = 20;    // Äquivalenzpunkt (anpassen!)
+  //let burettelevel = 5;
+  /*Test*/
+  let buretteLevel = 260; // voll
+  const buretteMax = 260;
+  const flaskFill = document.getElementById("flaskFill");
+
+  //let flaskLevel = 0;
+  const maxFlask = 45;
+
+  //const drip = setInterval(dripper,600);
+
+  //const flask = document.getElementById("flaskLiquid");
+  const flask = document.getElementById("flaskClip");
+  //const burLevel = document.getElementById("buretteLiquid");
+  const burRect = document.getElementById("buretteClip");
+  const burClip = document.querySelector("#buretteClip rect");
+
+  function updateBurette() {
+
+    if (buretteLevel <= 0) return;
+
+    buretteLevel -= 2;
+
+    burClip.setAttribute("y", 260 - buretteLevel);
+    burClip.setAttribute("height", buretteLevel);
+  }
+  /*
+  function updateBurette(){
+
+    if (buretteLevel <= 0) return;
+
+    buretteLevel -= 2; // wird leerer
+    burRect.setAttribute("y", 320 - buretteLevel);
+    burRect.setAttribute("height", buretteLevel);
+
+    //burettelevel +=2;
+    //burRect.setAttribute("y", burettelevel);
+
+  }*/
+
+  <!--neu-->
+  function updateFlask() {
+
+    if (flaskLevel >= maxFlask) return;
+
+    flaskLevel += 1.2;
+
+    flaskFill.setAttribute("y", 60 - flaskLevel);
+    flaskFill.setAttribute("height", flaskLevel);
+
+    // Farbumschlag
+    if (flaskLevel > 7) {
+      flaskFill.setAttribute("fill", "#ff4da6");
+    }
+  }
+
+  /*
+  function updateFlask() {
+
+    if (flaskLevel >= maxLevel) return;
+
+    flaskLevel += 2; // Füllgeschwindigkeit
+
+    //flask.setAttribute("y", 1100 - flaskLevel);
+    //flask.setAttribute("height", flaskLevel);
+
+    // kleine Wellenbewegung triggern
+    flask.style.animation = "liquidWave 0.3s ease";
+
+    setTimeout(() => {
+      flask.style.animation = "none";
+    }, 300);
+
+    // 🌈 Farbumschlag
+    let ratio = flaskLevel / equivalence;
+
+    if (ratio < 1) {
+      //alert (77 + ratio*150);
+      flask.style.fill = `rgb(${77 + ratio*150}, ${166 - ratio*80}, ${255 - ratio*100}`;
+      //alert(`rgb(${77 + ratio*150}, 166 - ratio*80, 255 - ratio*100)`)
+    } else {
+      flask.style.fill = "#ff4da6";
+    }
+  }
+  */
+
+  function toggleDrip() {
+    if (dripInterval === null) {
+      document.getElementById("toggle").innerText = "Stopp";
+      dripper();
+    } else {
+      document.getElementById("toggle").innerText = "Titration fortsetzen";
+      dripStop();
+    }
+  }
+  function dripper() {
+
+    // falls schon läuft → nichts tun
+    if (dripInterval !== null) return;
+
+    dripInterval = setInterval(() => {
+
+      // Tropfen
+      drop.style.animation = "none";
+      drop.style.opacity = 0;
+      drop.getBoundingClientRect();
+      drop.style.opacity = 1;
+      drop.style.animation = "dropFall 0.6s linear";
+
+      // 👉 Kolben aktualisieren
+      updateFlask();
+      updateBurette();
+      createSwirl(); // 👈 neu
+    }, 600);
+  }
+
+  function dripStop(){
+    clearInterval(dripInterval);
+    dripInterval = null;
+
+    drop.style.animation = "none";
+    drop.style.opacity = 0;
+  }
+  /*
+  function stopdripLoop() {
+    if(dripping) {
+
+      clearInterval(dripping);
+      dripping = false;
+    }
+
+  }
+
+  /* -------------------------
+       Tropfen Loop (realistisch)
+    ------------------------- */
+  /*
+  function dripLoop() {
+    dripping = true;
+    setInterval(() => {
+
+      // Tropfen zurücksetzen
+      drop.style.animation = "none";
+      drop.style.opacity = 0;
+
+      // Reflow erzwingen (wichtig!)
+      drop.getBoundingClientRect();
+
+      // Animation starten
+      drop.style.opacity = 1;
+      drop.style.animation = "dropFall 0.6s linear";
+
+    }, 600); // exakt gleiche Dauer wie Animation
+  }
+*/
+    function startAnimation() {
+    if (running) return;
+    running = true;
+    //dripping = false;
+
+    const burette = document.getElementById("buretteLiquid");
+    const tube = document.getElementById("tube");
+    const drop = document.getElementById("drop");
+    const flask = document.getElementById("flaskLiquid");
+    const clipRect = document.querySelector("#buretteClip rect");
+    let level = 0;
+    let flaskLevel = 0;
+
+    /* -------------------------
+       Rohr vorbereiten
+    -------------------------*/
+    const length = tube.getTotalLength();
+
+    tube.style.visibility = "visible";   // 👈 WICHTIG
+    tube.style.strokeDasharray = length;
+    tube.style.strokeDashoffset = length;
+
+// kleiner Trick für sauberen Start
+    //   tube.getBoundingClientRect();
+
+    tube.style.animation = "flow 1.5s linear forwards";
+
+    /* -------------------------
+       Bürette füllen (smooth)
+    ------------------------- */
+
+    /*function fillBurette() {
+      //burette.style.visibility = "visible";
+      if (level >= 260) {
+        startFlow();
+        return;
+      }
+
+      level += 1.5;
+      burette.setAttribute("y", 300 - level);
+      burette.setAttribute("height", level);
+
+      requestAnimationFrame(fillBurette);
+    }*/
+      function fillBurette() {
+        burette.style.visibility = "visible";
+        const fillInterval = setInterval(() => {
+
+          if (level >= 260) {
+            clearInterval(fillInterval);
+            return;
+          }
+
+          level += 2;
+
+          // 👉 Clip nach oben wachsen lassen
+          clipRect.setAttribute("y", 260 - level);
+          clipRect.setAttribute("height", level);
+
+        }, 20);
+      }
+    /* -------------------------
+       Fluss starten
+    ------------------------- */
+    function startFlow() {
+      tube.style.animation = "flow 1.5s linear forwards";
+      //dripLoop();
+      //fillFlask();
+    }
+    fillBurette();
+  }
+  const mixLayer = document.getElementById("mixLayer");
+
+  function createSwirl() {
+
+    //const mixLayer = document.getElementById("mixLayer");
+
+    const swirl = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "ellipse"
+    );
+
+    swirl.setAttribute("cx", 70);
+    swirl.setAttribute("cy", 40);
+    swirl.setAttribute("rx", 8);
+    swirl.setAttribute("ry", 4);
+
+   //swirl.setAttribute("fill", "red");
+    //swirl.setAttribute("opacity", "0.5");
+    swirl.setAttribute("class", "mix");
+    mixLayer.appendChild(swirl);
+    // nach Animation entfernen
+    setTimeout(() => {
+      swirl.remove();
+    }, 2000);
+  }
+
+   /*
+  function createSwirl() {
+    console.log(document.getElementById("mixLayer"));
+    //console.log(swirl);
+    const swirl = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+
+    // Startposition unter Tropfen
+    swirl.setAttribute("cx", 219 + Math.random()*10);
+    swirl.setAttribute("cy", 420);
+    swirl.setAttribute("rx", 8 + Math.random()*5);
+    swirl.setAttribute("ry", 4 + Math.random()*3);
+    swirl.classList.add("mix");
+    swirl.setAttribute("class", "mix");
+
+    //mixLayer.appendChild(swirl);
+
+    // nach Animation entfernen
+    setTimeout(() => {
+      swirl.remove();
+    }, 2000);
+  }*/
+</script>
+</body>
+</html>

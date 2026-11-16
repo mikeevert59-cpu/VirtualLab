@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Drehregler Beispiel</title>
+  <style>
+    #knobSVG {
+      width: 200px;
+      height: 200px;
+      user-select: none; /* Verhindert Markieren beim Ziehen */
+      cursor: pointer;
+    }
+    #pointer {
+      transform-origin: 50% 50%;
+      transition: transform 0.05s linear;
+    }
+  </style>
+</head>
+<body>
+
+<svg id="knobSVG" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="90" stroke="#ccc" stroke-width="10" fill="#eee" />
+  <!-- Zeiger -->
+  <line id="pointer" x1="100" y1="100" x2="100" y2="20" stroke="#444" stroke-width="8" stroke-linecap="round" />
+</svg>
+
+<p>Geschwindigkeit: <span id="speedReadout">1500 ms/drop</span></p>
+
+<script>
+  // Variablen
+  let knobAngle = 130; // Startwinkel
+  let dragging = false;
+  let dripSpeed = 1500;
+  let running = true; // Beispiel: Prozess läuft
+  let dripInterval = null;
+
+  // Beispiel-Drip-Funktion
+  function dripper() {
+    console.log("Tropfen gefallen. Intervall: " + dripSpeed + " ms");
+    // Hier eigentliche Tropf-Logik einfügen
+  }
+
+  // Elemente holen
+  const knobSVG = document.getElementById("knobSVG");
+  const pointer = document.getElementById("pointer");
+  const speedReadout = document.getElementById("speedReadout");
+
+  // Funktion zum Aktualisieren des Knopfes
+  function updateKnob() {
+    pointer.style.transform = `rotate(${knobAngle}deg)`;
+    dripSpeed = Math.round(1500 - ((knobAngle + 130) / 260) * 1400);
+    speedReadout.textContent = dripSpeed + " ms/drop";
+
+    if (running) {
+      if (dripInterval) clearInterval(dripInterval);
+      dripInterval = setInterval(dripper, dripSpeed);
+    }
+  }
+
+  // Maus gedrückt - Start Dragging
+  knobSVG.addEventListener("mousedown", (e) => {
+    dragging = true;
+    e.preventDefault(); // Verhindert unerwünschte Textauswahl
+  });
+
+  // Maus loslassen - Stop Dragging
+  document.addEventListener("mouseup", () => {
+    dragging = false;
+  });
+
+  // Maus bewegen - Aktualisiere Winkel nur beim Ziehen
+  document.addEventListener("mousemove", (e) => {
+    if (!dragging) return;
+
+    const rect = knobSVG.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
+
+    // Winkel berechnen, 0° oben, positiv im Uhrzeigersinn
+    let angle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+
+    // Winkel anpassen in -130° bis 130°
+    if (angle > 180) angle -= 360; // Werte in Bereich -180..180 bringen
+
+    angle = Math.max(-130, Math.min(130, angle));
+
+    knobAngle = angle;
+
+    updateKnob();
+  });
+
+  // Erster Aufruf zum Startzustand
+  updateKnob();
+</script>
+</body>
+</html>
+

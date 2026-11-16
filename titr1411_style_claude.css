@@ -1,0 +1,693 @@
+/* RESET & BASE STYLES */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  background-color: #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1f2937;
+}
+
+/* HEADER */
+#container {
+  width: 100%;
+  background: linear-gradient(135deg, #6b21a8, #7e22ce);
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 18px 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* MAIN GRID LAYOUT */
+#scene {
+  display: grid;
+  grid-template-columns: minmax(300px, 1.8fr) minmax(520px, 2.2fr) minmax(320px, 1.8fr);
+  gap: 24px;
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+  #scene {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* CARDS */
+.col-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+#box1{
+  width: 80%;
+}
+#box2{
+  width: 100%;
+}
+
+/* SECTION HEADERS */
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sectionTitle .number {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: #6b21a8;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* FORM & TABLES (SPALTE 1) */
+.panelTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.expTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.expTable td {
+  padding: 10px 4px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+}
+
+.expTable td:first-child {
+  font-weight: 600;
+  color: #4b5563;
+  width: 40%;
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+select, input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+  transition: all 0.2s;
+}
+
+select:focus, input[type="text"]:focus {
+  border-color: #6b21a8;
+  box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.15);
+}
+
+.unit-label {
+  font-size: 13px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+#btnNewExperiment {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #6b21a8;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#btnNewExperiment:hover {
+  background: #581c87;
+}
+
+.resultDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+#dataTable2 {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  font-size: 13px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#dataTable2 th {
+  background: #6b21a8;
+  color: white;
+  padding: 8px;
+  font-weight: 600;
+}
+
+#dataTable2 td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: center;
+}
+
+#dataTable2 tr:nth-child(even) {
+  background: #faf5ff;
+}
+
+/* SPALTE 2: LABOR & STEUERGERÄT */
+.labContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  /*background-color: #6ee7b7;*/
+}
+
+.svgWrap {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  justify-content: center;
+}
+
+.vb {
+  width: 100%;
+  height: auto;
+}
+
+/* DIGITAL PANEL (MODERN DARK LOOK) */
+/*
+#digitalPanel {
+  width: 100%;
+  max-width: 320px;
+}
+*/
+
+.lcdFrame {
+  background: #0f172a;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border: 1px solid #334155;
+}
+
+.lcdLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  letter-spacing: 1.5px;
+}
+
+.lcdDisplay_on {
+  background: #022c22;
+  border: 1px solid #065f46;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: right;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 28px;
+  font-weight: bold;
+  color: #34d399;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+}
+
+.lcdDisplay_off {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+}
+
+#displ1, #displ2 {
+  line-height: 1.2;
+}
+
+.unit {
+  font-size: 16px;
+  margin-left: 6px;
+  color: #6ee7b7;
+}
+
+#progressWrap {
+  margin-top: 14px;
+  height: 10px;
+  background: #1e293b;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+#progressBar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  transition: width 0.3s ease;
+}
+
+#knobPanel {
+  margin-top: 16px;
+  padding: 12px;
+  background: #1e293b;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.moduleLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+#speedReadout {
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+#knob {
+  fill: url(#knobGradient);
+  stroke: #475569;
+  stroke-width: 3;
+  cursor: pointer;
+}
+
+#pointer {
+  stroke: #ef4444;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transform-origin: 70px 70px;
+}
+
+.knobScale {
+  fill: none;
+  stroke: #475569;
+  stroke-width: 3;
+  stroke-dasharray: 2 6;
+}
+
+#touch {
+  margin-top: 16px;
+}
+
+#touchPanel {
+  width: 100%;
+  height: auto;
+}
+
+.touchBtn {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.touchBtn:hover {
+  opacity: 0.8;
+}
+
+.touchBtn circle {
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 2;
+  pointer-events:all;
+}
+
+.powerActive circle {
+  fill: #10b981;
+  stroke: #10b981;
+}
+
+.runActive circle {
+  fill: #10b981;
+  stroke: #10b981;
+}
+
+.holdActive rect {
+  animation: holdBlink 0.8s infinite;
+}
+
+@keyframes holdBlink {
+  50% { opacity: 0.3; }
+}
+
+/* SPALTE 3: AUSWERTUNG */
+#curve {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#dataTable th {
+  background: #6b21a8;
+  color: white;
+  padding: 10px;
+  font-weight: 600;
+}
+
+#dataTable td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: center;
+}
+
+#dataTable tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* ANIMATIONEN FUER SVG FLUSS */
+.liquid {
+  fill: #3b82f6;
+  opacity: 0.5;
+  transition: fill 0.6s ease;
+}
+
+.drop {
+  fill: #3b82f6;
+  opacity: 0;
+}
+
+.mix {
+  /*fill: #ec4899;*/
+  /*fill: #00ff00;*/
+  opacity: 0.6;
+  filter: url(#blur);
+  animation: swirlMove 1.8s ease-out forwards;
+}
+
+@keyframes swirlMove {
+  0% { transform: translate(0, 0) scale(0.7); opacity: 0.6; }
+  50% { transform: translate(-8px, -12px) scale(1); opacity: 0.45; }
+  100% { transform: translate(12px, -24px) scale(1.4); opacity: 0; }
+}
+/* ==========================================
+   ANIMATIONEN FÜR DROP & FLOW (TROPFEN)
+   ========================================== */
+
+/* Tropfen-Fallbewegung vom Bürettenauslass in den Erlenmeyerkolben */
+@keyframes dropFall {
+  0% {
+    cy: 420px;
+    opacity: 1;
+    r: 4px;
+  }
+  80% {
+    cy: 485px;
+    opacity: 1;
+    r: 3.5px;
+  }
+  100% {
+    cy: 495px;
+    opacity: 0;
+    r: 2px;
+  }
+}
+
+
+/* ============================================================
+   OPTION 1 (ANPASSUNG): VERSUCHSAUFBAU GRÖSSER & TIEFER
+   ============================================================ */
+
+/* 1. Mittlere Spalte als Flexbox (nebeneinander) */
+.labContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* Verhindert vertikales Verzerren */
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+}
+
+/* 2. SVG-Container vergrößern & nach unten versetzen */
+.svgWrap {
+  flex: 1 1 90%;          /* Gibt dem SVG deutlich mehr Raum (vorher 50%) */
+  min-height: 700px;
+  max-width: 450px;    /* Größeres Limit für die Abbildung */
+  margin-top: 20px;       /* Schiebt den Versuchsaufbau weiter nach unten (tiefer) */
+  display: flex;
+  justify-content: center;
+}
+
+
+/* SVG skaliert automatisch mit der Containergröße */
+.vb {
+  width: 100%;
+  height: auto;
+}
+
+/* 3. Steuergerät daneben platzieren */
+#digitalPanel {
+  flex: 1 1 60%;
+  max-width: 300px;
+  margin-top: 50px; /* Steuergerät bleibt gewohnt oben ausgerichtet */
+}
+
+.disabledBtn {
+  opacity: 0.25 !important;
+  pointer-events: none !important;
+}
+
+.disabledBtn * {
+  pointer-events: none !important;
+}
+
+
+/* DigitalPanel: feste Breite trotz wechselnder Anzeigetexte */
+/*
+#digitalPanel {
+  width: 300px;
+  max-width: 300px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+*/
+
+.lcdFrame {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#lcdDisplay {
+  width: 100%;
+  height: 100px;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#displ1,
+#displ2 {
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Startmeldungen */
+#displ1.startText,
+#displ2.startText {
+  font-size: 14px;
+}
+/*Herunterfahren */
+#displ1.endText{
+  font-size: 14px;
+}
+
+.vb { overflow: visible; }
+
+#digitalPanel { position: relative; transform-origin: top left; } /* Origins fix, sonst rechnet der Zoom-Slider mit */
+
+/* Gesperrte Auswahlfelder (während der Titration bzw. nach dem Start) */
+select:disabled {
+  opacity: 0.55;
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.labContainer { position: relative; }
+
+#cableOverlay {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 5;
+}
+
+#cablePlug {                 /* gleiche Geometrie wie vorher ::before */
+  position: absolute;
+  left: -7px; top: 205px;    /* Höhe der Buchse im Panel, nach Geschmack */
+  width: 12px; height: 14px;
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 3px;
+}
+/*neu 13.11.*/
+#scene {
+  display: grid;
+  gap: clamp(12px, 2vw, 24px);
+  padding: clamp(12px, 2vw, 24px);
+  grid-template-columns: minmax(280px, 1fr) minmax(0, 1.4fr) minmax(280px, 1fr);
+}
+.col-card { min-width: 0; padding: clamp(14px, 2vw, 24px); }
+#box1 { width: 100%; }                      /* statt 80 % */
+
+/* Tablet: Versuchsaufbau links, Protokoll und Auswertung rechts */
+@media (max-width: 1199px) {
+  #scene { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  #box2  { grid-column: 1; grid-row: 1 / span 2; }
+  #box1  { grid-column: 2; grid-row: 1; }
+  .col-card.panel { grid-column: 2; grid-row: 2; }
+}
+
+/* Handy: eine Spalte in der natürlichen Reihenfolge 1 → 2 → 3 */
+@media (max-width: 799px) {
+  #scene { grid-template-columns: 1fr; }
+  #box1, #box2, .col-card.panel { grid-column: 1; grid-row: auto; }
+}
+
+.labContainer {
+  container-type: inline-size;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.svgWrap {
+  min-height: 0;                    /* statt 700px */
+  aspect-ratio: 320 / 550;          /* entspricht deiner viewBox */
+  max-height: 85vh;                 /* Handy im Querformat */
+  flex: 1 1 260px;
+  max-width: 450px;
+}
+#digitalPanel { flex: 1 1 240px; max-width: 320px; }
+
+@container (max-width: 620px) {
+  #digitalPanel { margin-top: 0; }  /* steht jetzt unter dem Aufbau */
+}
+
+#container { font-size: clamp(18px, 3vw, 24px); }
+#lcdDisplay { height: auto; min-height: 84px; }
+
+@media (pointer: coarse) {
+  select, input[type="text"] { min-height: 44px; font-size: 16px; } /* 16px verhindert Zoom auf iOS */
+}
+
+
+/* ============================================================
+   ERGÄNZT: Schritt-Navigation, Tabellen, Touch
+   ============================================================ */
+
+/* Tabellen: eigener Scrollbereich, Kopfzeile bleibt sichtbar */
+.tableScroll { overflow-x: auto; border-radius: 8px; }
+.tableScrollY { max-height: 260px; overflow-y: auto; border: 1px solid #e5e7eb; }
+.tableScroll #dataTable,
+.tableScroll #dataTable2 { overflow: visible; border-radius: 0; }
+.tableScroll thead th { position: sticky; top: 0; z-index: 1; }
+
+/* Drehregler per Touch bedienbar (kein Scrollen beim Drehen) */
+#knobSVG { touch-action: none; }
+
+/* Schritt-Navigation: Desktop/Tablet ausgeblendet */
+#stepNav { display: none; }
+
+@media (max-width: 799px) {
+  body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }
+
+  #stepNav {
+    display: flex;
+    gap: 6px;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  }
+  #stepNav button {
+    flex: 1;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+    color: #4b5563;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #stepNav .n {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  #stepNav button[aria-current="step"] {
+    background: #6b21a8;
+    border-color: #6b21a8;
+    color: #ffffff;
+  }
+  #stepNav button[aria-current="step"] .n {
+    background: #ffffff;
+    color: #6b21a8;
+  }
+
+  /* Nur den aktiven Schritt anzeigen */
+  #scene[data-active="1"] > section:not([data-step="1"]),
+  #scene[data-active="2"] > section:not([data-step="2"]),
+  #scene[data-active="3"] > section:not([data-step="3"]) {
+    display: none;
+  }
+}
+
