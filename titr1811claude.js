@@ -54,8 +54,10 @@ function checkExperimentReady() {
   updateStatusUI();
   if (ready) {
     createExperiment();
+    document.getElementById("container").innerHTML = "Säure-Base-Titrationen: ";
+    /*
     document.getElementById("container").innerHTML = "Säure-Base-Titrationen: " +
-      "<small>" + konzProbe.toFixed(2) + " mol/l " + probe.name + " mit " + konzTitrant.toFixed(2) + " mol/l " + titrantFor(probe) + "</small>"; // TODO: zeigt die gesuchte Konzentration an
+      "<small>" + konzProbe.toFixed(2) + " mol/l " + probe.name + " mit " + konzTitrant.toFixed(2) + " mol/l " + titrantFor(probe) + "</small>";*/
     renderUI();}
 }
 
@@ -145,7 +147,7 @@ let konzTitrant = 0;
 let konzProbe = 0.02;
 let volProb = 500;
 let deviceOn = false;
-let panelScale = 0.75;
+let panelScale = 0.55;
 const possibleConcentrations = [
   0.02, 0.05, 0.08, 0.10, 0.12, 0.15, 0.20
 ];
@@ -2053,3 +2055,10 @@ function applyChartTheme() {
   }
   setTheme(root.dataset.theme === "dark" ? "dark" : "light", false);   // Button/Chart-Farben angleichen
 })();
+
+function showErg(){
+  const ready = paramsReady();
+  if(ready){ alert(konzProbe.toFixed(2) + " mol/l " + probe.name)}
+  else
+    alert("Ätsch");
+}
