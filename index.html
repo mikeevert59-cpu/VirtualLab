@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <!-- Theme vor dem ersten Zeichnen setzen (verhindert Aufblitzen) -->
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("titrTheme"); } catch (e) {}
+      if (!t) t = (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <title>Säure-Base-Titrationen</title>
+  <link rel="stylesheet" href="jbTitr.css?v=6">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body>
+
+<header id="container">
+  Säure-Base-Titrationen
+</header>
+
+<!-- Hell-/Dunkelmodus (liegt außerhalb der Kopfzeile, weil deren Inhalt per JS ersetzt wird) -->
+<button id="themeToggle" class="themeToggle" type="button" aria-pressed="false" aria-label="Dunkelmodus ein/aus" title="Zum dunklen Modus wechseln">
+  <svg class="icoMoon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  <svg class="icoSun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+
+<!-- Fortschritt: wird aus dem Gerätezustand gesteuert (updateStatusUI) -->
+<ol id="progressSteps" class="progressSteps" aria-label="Fortschritt">
+  <li data-p="1" class="is-active"><span class="dot">1</span><span class="lbl">Parameter</span></li>
+  <li data-p="2"><span class="dot">2</span><span class="lbl">Titration</span></li>
+  <li data-p="3"><span class="dot">3</span><span class="lbl">Auswertung</span></li>
+</ol>
+
+<main id="scene" data-active="1">
+
+  <!-- SPALTE 1: Versuchsprotokoll -->
+  <section class="col-card" id="box1" data-step="1">
+    <div class="sectionTitle"><span class="number">1</span> Versuchsprotokoll</div>
+
+    <div id="experimentPanel" class="paraPanel_on">
+      <div class="panelTitle">
+        Versuchsparameter
+        <span id="experimentStatus" class="statusPill is-input" role="status">Eingabe</span>
+      </div>
+
+      <table class="expTable">
+        <tr>
+          <td>Probenauswahl</td>
+          <td>
+            <select id="probeSelect">
+              <option value="" selected disabled>Auswählen</option>
+              <optgroup label="Säuren">
+                <option value="HCl">Salzsäure (HCl)</option>
+                <option value="H2SO4">Schwefelsäure (H₂SO₄)</option>
+                <option value="H3PO4">Phosphorsäure (H₃PO₄)</option>
+                <option value="citricAcid">Zitronensäure</option>
+              </optgroup>
+              <optgroup label="Basen">
+                <option value="NaOH">Natronlauge (NaOH)</option>
+                <option value="KOH">Kalilauge (KOH)</option>
+                <option value="CaOH2">Calciumhydroxid (Ca(OH)₂)</option>
+                <option value="NH3">Ammoniak (NH₃)</option>
+                <option value="Na2CO3">Natriumcarbonat (Na₂CO₃)</option>
+              </optgroup>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Probe</td>
+          <td id="acidName">-</td>
+        </tr>
+        <tr>
+          <td>Titrant</td>
+          <td id="titrantName">-</td>
+        </tr>
+        <tr>
+          <td>Indikator:</td>
+          <td id="indik">-</td>
+        </tr>
+        <tr>
+          <td>c<sub>Probe</sub></td>
+          <td id="cProbe">?</td>
+        </tr>
+        <tr>
+          <td>c<sub>Titrant</sub></td>
+          <td>
+            <div class="input-with-unit">
+              <select id="cTitrant">
+                <option value="" selected disabled>Auswählen</option>
+                <option>0.05</option>
+                <option>0.10</option>
+                <option>0.20</option>
+                <option>0.50</option>
+                <option>1.00</option>
+                <option>2.00</option>
+              </select>
+              <span class="unit-label">mol/l</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>V<sub>Probe</sub></td>
+          <td>
+            <div class="input-with-unit">
+              <select id="vProbe">
+                <option value="" selected disabled>Auswählen</option>
+                <option>50</option>
+                <option>100</option>
+                <option>150</option>
+                <option>200</option>
+                <option>250</option>
+                <option>500</option>
+              </select>
+              <span class="unit-label">ml</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Ihr Ergebnis</td>
+          <td id="erg">
+            <div class="input-with-unit">
+              <input type="text" id="ergText" class="ergText" disabled inputmode="decimal" pattern="[0-9]+(\.[0-9]+)?" placeholder="0.00">
+              <span class="unit-label">mol/l</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="tableScroll">
+      <table id="dataTable2">
+        <thead class="tableHead">
+        <tr>
+          <th>Aufgabe</th>
+          <th>Versuch</th>
+          <th>Probe</th>
+          <th>cTitrant</th>
+          <th>Vol. Probe</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody2">
+        </tbody>
+      </table>
+      </div>
+
+      <button id="btnNewExperiment" class="resultDisabled" onclick="gesuchtKonz()">
+        Ergebnis prüfen
+      </button>
+    </div>
+  </section>
+
+  <!-- SPALTE 2: Versuchsdurchführung -->
+  <section class="col-card setup" id="box2" data-step="2">
+    <div class="sectionTitle"><span class="number" onclick="showErg()">2</span> Versuchsdurchführung</div>
+
+    <div id="labViewport">
+    <div class="labContainer">
+      <!-- neu -->
+      <svg id="cableOverlay" aria-hidden="true">
+        <path id="cablePath" fill="none" stroke="#252525" stroke-linecap="round"/>
+      </svg>
+      <!-- SVG Versuchsaufbau -->
+      <div class="svgWrap">
+        <svg viewBox="-30 -10 320 550" class="vb">
+          <image href="img/Titration2.svg"/>
+          <g id="buretteScale" transform="translate(103,15)"></g>
+
+          <!-- Bürette -->
+          <svg x="106" y="25" width="50" height="260">
+            <clipPath id="buretteClip">
+              <rect x="0" y="0" width="25" height="260"/>
+            </clipPath>
+            <path id="buretteLiquid"
+                  d="M0.5 236V0.5H21V236L19.5 240.5L15.5 246.5H6L2 240.5L0.5 236Z"
+                  class="liquid"
+                  visibility="hidden"
+                  clip-path="url(#buretteClip)"/>
+          </svg>
+
+          <!-- Rohr -->
+          <svg x="116" y="270">
+            <path id="tube"
+                  d="M0.5 0V13.5L18 21L56.5 30L94.5 40L102.5 43V56.5"
+                  stroke="#4da6ff"
+                  stroke-width="4"
+                  fill="none"
+                  visibility="hidden"/>
+          </svg>
+
+          <!-- Tropfen -->
+          <circle id="drop" cx="219" cy="420" r="4" class="drop"/>
+
+          <!-- Zweites Kabel: Verbindung zum pH-Steuergerät
+          <path id="phCable2"
+                d="M232 345
+         C250 320, 270 300, 280 270
+         S270 220, 285 190"
+                fill="none"
+                stroke="#252525"
+                stroke-width="3"
+                stroke-linecap="round"/>
+        -->
+
+          <!-- pH-Glaselektrode und Kabel -->
+          <g id="phElectrode">
+            <!-- Kabel: Endpunkt an den rechten Rand der viewBox angepasst (x ≈ 285) -->
+            <path d="M232 345
+                     C260 320, 280 285, 270 255
+                     S250 210, 280 170
+                     S270 140, 285 110"
+                  fill="none"
+                  stroke="#252525"
+                  stroke-width="3"
+                  stroke-linecap="round"/>
+
+            <!-- Elektrodenkopf -->
+            <rect x="225" y="338" width="14" height="18"
+                  rx="3" fill="#444"
+                  stroke="#222" stroke-width="1"/>
+
+            <!-- Glaskörper der Elektrode -->
+            <path d="M226 350
+                     L238 350
+                     L234 432
+                     Q232 441 229 432 Z"
+                  fill="#e9f6fa"
+                  fill-opacity="0.9"
+                  stroke="#718995"
+                  stroke-width="1.5"/>
+
+            <!-- Innenleiter -->
+            <path d="M232 355 L232 425"
+                  stroke="#aab9c0"
+                  stroke-width="2"/>
+
+            <!-- Glasmembran an der Spitze -->
+            <ellipse cx="231.5" cy="432" rx="3.5" ry="5"
+                     fill="#b9e8f5"
+                     stroke="#718995"
+                     stroke-width="1"/>
+          </g>
+
+          <!-- Kolben / Flüssigkeit -->
+          <svg x="153" y="485">
+            <defs>
+              <mask id="flaskMask">
+                <rect x="0" y="0" width="140" height="75" fill="black"/>
+                <rect id="flaskMaskLevel" x="0" y="71" width="140" height="0" fill="white"/>
+              </mask>
+              <filter id="blur">
+                <feGaussianBlur stdDeviation="3"/>
+              </filter>
+            </defs>
+
+            <path id="flaskLiquid"
+                  d="M9.5 25L17.5 0.5H115.5L122.5 25 L132.5 53.5V59L130.5 64.5L125 68.5 L117.5 71H9.5L5.5 68.5L3 64.5 L0.5 59V53.5L9.5 25Z"
+                  fill="#b3d4fc"
+                  opacity="0.7"
+                  mask="url(#flaskMask)"/>
+            <g mask="url(#flaskMask)" id="mixLayer"></g>
+          </svg>
+        </svg>
+      </div>
+      <!-- Digitales Steuergerät -->
+      <div id="digitalPanel">
+        <div id="cablePlug"></div>
+        <div class="lcdFrame">
+          <div class="lcdLabel">VERBRAUCH / pH-WERT</div>
+          <div id="lcdDisplay" class="lcdDisplay_on">
+            <div id="displ1">0.00<span class="unit">mL</span></div>
+            <div id="displ2">--<span class="unit">pH</span></div>
+          </div>
+          <div id="progressWrap">
+            <div id="progressBar"></div>
+          </div>
+
+          <!-- Drehregler -->
+          <div id="knobPanel">
+            <div class="moduleLabel">DOSING RATE</div>
+            <svg id="knobSVG" width="120" height="120" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="54" class="knobScale"/>
+              <circle id="knob" cx="70" cy="70" r="42"/>
+              <line id="pointer" x1="70" y1="70" x2="70" y2="34"/>
+              <defs>
+                <radialGradient id="knobGradient">
+                  <stop offset="0%" stop-color="#444"/>
+                  <stop offset="100%" stop-color="#111"/>
+                </radialGradient>
+              </defs>
+            </svg>
+            <div id="speedReadout">0 ml/s</div>
+          </div>
+
+          <!-- Touch-Tasten -->
+          <div id="touch">
+            <svg id="touchPanel" viewBox="0 0 220 70">
+              <rect x="0" y="0" width="220" height="70" rx="12" fill="#1e293b"/>
+
+              <!-- Power -->
+              <g id="btnPower" class="touchBtn" onclick="togglePower()">
+                <circle cx="35" cy="35" r="20"/>
+                <path d="M35 20 V35" stroke="white" stroke-width="3" fill="none"/>
+                <path d="M27 25 A12 12 0 1 0 43 25" stroke="white" stroke-width="3" fill="none"/>
+              </g>
+
+              <!-- Run -->
+              <g id="btnRun" class="touchBtn" onclick="toggleDrip()">
+                <circle cx="90" cy="35" r="20"/>
+                <polygon points="84,24 84,46 102,35" fill="white"/>
+              </g>
+
+              <!-- Hold -->
+              <g id="btnHold" class="touchBtn" onclick="toggleDrip()">
+                <circle cx="145" cy="35" r="20"/>
+                <rect x="136" y="26" width="18" height="18" fill="#ff8c1a"/>
+              </g>
+
+              <!-- Reset -->
+              <g id="btnReset" class="touchBtn1_off" onclick="resetTitrator2()">
+                <circle cx="200" cy="35" r="20"/>
+                <path d="M211 29 A12 12 0 1 0 211 42" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                <path d="M211 22 L211 30 L203 30" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /labViewport -->
+  </section>
+
+  <!-- SPALTE 3: Versuchsauswertung -->
+  <section class="col-card panel" id="box3" data-step="3">
+    <div class="sectionTitle"><span class="number">3</span> Versuchsauswertung</div>
+
+    <div id="curve"></div>
+
+    <div class="tableScroll tableScrollY">
+    <table id="dataTable">
+      <thead class="tableHead">
+      <tr>
+        <th>Volumen (ml)</th>
+        <th>pH</th>
+      </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+    </div>
+
+    <div id="ergebnis" style="visibility: hidden"></div>
+  </section>
+
+</main>
+
+<!-- Schritt-Navigation (nur auf dem Handy sichtbar) -->
+<nav id="stepNav" aria-label="Schritte">
+  <button type="button" data-step="1" aria-current="step"><span class="n">1</span> Protokoll</button>
+  <button type="button" data-step="2"><span class="n">2</span> Versuch</button>
+  <button type="button" data-step="3"><span class="n">3</span> Auswertung</button>
+</nav>
+
+<script src="jbTitr.js?v=7" defer></script>
+</body>
+</html>
